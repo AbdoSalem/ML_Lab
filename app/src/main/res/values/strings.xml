@@ -5,4 +5,17 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <array name="scenario_descriptions">
+        <item>Scenario 00</item>
+        <item>Scenario 01</item>
+        <item>Scenario 10</item>
+        <item>Scenario 11</item>
+        <item>Scenario 20</item>
+        <item>Scenario 21</item>
+        <item>Scenario 30</item>
+        <item>Scenario 31</item>
+    </array>
 </resources>

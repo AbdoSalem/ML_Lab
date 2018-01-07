@@ -1,8 +1,10 @@
 package com.hci.apps.ml_lab;
 
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +24,9 @@ import com.hci.apps.ml_lab.firebase.DatabaseManager;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    ViewPager pager;
+    FloatingActionButton bDone,bRestart,bReset;
+    int currentCount =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +34,31 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        pager = (ViewPager) findViewById(R.id.view_pager);
+        pager.setAdapter(new ScenariosAdapter(getSupportFragmentManager()));
+        pager.beginFakeDrag();
+        bDone = (FloatingActionButton) findViewById(R.id.b_done);
+        bRestart = (FloatingActionButton) findViewById(R.id.b_restart);
+        bReset = (FloatingActionButton) findViewById(R.id.b_reset);
+
+        bDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                done();
+            }
+        });
+
+        bRestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                restart();
+            }
+        });
+
+        bReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reset();
             }
         });
 
@@ -50,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         DatabaseManager.getInstance().getScenarioData(1, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(MainActivity.this,dataSnapshot.getValue().toString(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,dataSnapshot.getValue().toString(),Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -59,6 +83,26 @@ public class MainActivity extends AppCompatActivity
             }
         });
          DatabaseManager.getInstance().addScenarioData(1,"1");
+    }
+
+    private void done() {
+        currentCount++;
+        if(currentCount<8){
+            //ToDO: save the scenario to firebase
+            DatabaseManager.getInstance().addScenarioData(currentCount,"1");
+            pager.setCurrentItem(currentCount);
+        }else{
+            Snackbar.make(pager,"Thanks for your participation :)", BaseTransientBottomBar.LENGTH_LONG).show();
+        }
+    }
+
+    private void restart() {
+        currentCount=0;
+        pager.setCurrentItem(currentCount);
+    }
+
+    private void reset() {
+        //TODO: refresh all the readings collected
     }
 
     @Override
@@ -74,7 +118,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+       // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
